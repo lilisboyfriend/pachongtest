@@ -1,0 +1,181 @@
+from selenium import webdriver
+from openpyxl import load_workbook
+from copy import copy, deepcopy
+from openpyxl import Workbook
+from openpyxl import load_workbook
+import time
+import random
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+import xlwt
+
+
+
+def loadDriver():      #加载浏览器驱动
+    # driver = webdriver.Edge("H:\software\edgedriver_win64\msedgedriver.exe") #Edge
+    driver = webdriver.Chrome("H:\software\chromedriver_win32\chromedriver.exe")  #Chrome
+    options = webdriver.ChromeOptions()
+    prefs = {"download.default_directory": "D:\日报"}
+    options.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(chrome_options=options)
+    time.sleep(5)
+    driver.get("http://10.192.70.242:10080/default.aspx")
+    driver.implicitly_wait(20)
+
+    hwModel(driver)  #hw日报
+    zteModel(driver)  # zte日报
+    time.sleep(180)
+
+
+# -------------------------------------------------------------------------------------------------
+
+def fhModel(driver):
+    print("------------ fh ----------")
+    ftb1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
+    ftb1.click()
+    ftb2 = driver.find_element_by_xpath("//*[@id='2283']/tbody/tr/td[1]/a")
+    ftb2.click()
+    ftb3 = driver.find_element_by_xpath("//*[@id='2314']/tbody/tr/td[1]/a")
+    ftb3.click()
+    ftb4 = driver.find_element_by_xpath("//*[@id='12658']/tbody/tr/td[1]/a")
+    ftb4.click()  # 下载
+    time.sleep(20)
+    fhUrl = "D:\日报\日常巡检表.xlsx"
+    addDataFh(fhUrl)  # 增加数据
+    upLoad(driver, fhUrl)  # 上传数据
+    time.sleep(10)
+
+def zteModel(driver):
+    print("———————— ZTE ——————————")
+    zbt1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
+    zbt1.click()
+    zbt2 = driver.find_element_by_xpath("//*[@id='1']/tbody/tr/td[1]/a")
+    zbt2.click()
+    zbt3 = driver.find_element_by_xpath("//*[@id='8']/tbody/tr/td[1]/a")
+    zbt3.click()
+    zbt4 = driver.find_element_by_xpath("//*[@id='17034']/tbody/tr/td[1]/a")  # 不同年份不一样
+    zbt4.click()
+    zbt5 = driver.find_element_by_xpath("//*[@id='17459']/tbody/tr/td[1]/a")  # 不同月份不一样
+    zbt5.click()  # 下载文件
+    driver.implicitly_wait(10)
+    time.sleep(30)
+    zteFileUrl = "D:\日报\\2021ZTE日常维护表_中兴维护计划3月.xlsx"
+    addDataZte(zteFileUrl)  # 增加数据
+    upLoad(driver, zteFileUrl) #上传数据
+    time.sleep(10)
+
+def hwModel(driver):
+    print("HW.................")
+    bt1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
+    bt1.click()
+    driver.implicitly_wait(2)
+    bt2 = driver.find_element_by_xpath("//*[@id='2']/tbody/tr/td[1]/a")
+    bt2.click()
+    driver.implicitly_wait(2)
+    bt3 = driver.find_element_by_xpath("//*[@id='372']/tbody/tr/td[1]/a")
+    bt3.click()
+    bt4 = driver.find_element_by_xpath("//*[@id='17032']/tbody/tr/td[1]/a")  # 不同年份不一样
+    bt4.click()
+    bt5 = driver.find_element_by_xpath("//*[@id='17457']/tbody/tr/td[1]/a")  # 不同月份不一样
+    bt5.click()  # 下载
+    driver.implicitly_wait(10)
+    time.sleep(20)
+    hwFileUrl = "D:\日报\HW_日常维护表_HW维护计划3月.xlsx"  #文件地址 每月需要修改
+    addDataHW(hwFileUrl)   # 处理表格
+    upLoad(driver, hwFileUrl) #上传文件
+    time.sleep(10)
+
+
+def upLoad(driver,fileUrl):  #上传文件
+    print("开始上传")
+    bt6 = driver.find_element_by_xpath("//*[@id='zz18_UploadMenu']")  # 上传
+    bt6.click()
+    input = driver.find_element_by_xpath("//*[@id='ctl00_PlaceHolderMain_ctl01_ctl02_InputFile']")
+    input.send_keys(fileUrl)
+    # input.click()
+    bt7 = driver.find_element_by_xpath("//*[@id='ctl00_PlaceHolderMain_ctl00_RptControls_btnOK']")
+    bt7.click()
+    driver.implicitly_wait(20)
+    time.sleep(10)
+    print("上传成功： "+fileUrl)
+
+def addDataFh(furl):
+    print("开始增加数据......FH")
+    wb = load_workbook(furl)
+    ws = wb.active
+    print(ws.title)
+    rmax = ws.max_row
+    lmax = ws.max_column
+    ws.cell(1, lmax + 1).value = time.strftime("%y.%m.%d", time.localtime())
+    for i in range(2, rmax + 1):
+        c = ws.cell(i, lmax).value
+        ws.cell(i, lmax + 1).value = c
+        so = ws.cell(i, lmax)
+        tar = ws.cell(i, lmax + 1)
+        if so.has_style:  # 复杂单元格格式
+            tar._style = copy(so._style)
+            tar.fill = copy(so.fill)
+            tar.border = copy(so.border)
+            tar.alignment = copy(so.alignment)
+    wb.save(furl)
+    print("数据添加完成FH")
+
+def addDataHW(furl):
+    print("开始增加数据......HW")
+    wb = load_workbook(furl)
+    ws = wb.active
+    print(ws)
+    print(ws.max_column)
+    print(ws.max_row)
+    rmax = ws.max_row
+    lmax = ws.max_column
+    so = ws.cell(1, lmax)
+    tar = ws.cell(1, lmax + 1)
+    ws.cell(1, lmax + 1).value = ws.cell(1, lmax).value + 1  #更新日期
+    if so.has_style:   #复杂单元格格式
+        tar._style = copy(so._style)
+        tar.fill = copy(so.fill)
+    for i in range(2, rmax):  #复制更新数据
+        c = ws.cell(i, lmax).value
+        ws.cell(i, lmax + 1).value = c
+    wb.save(furl)
+    print("修改完成。")
+
+def addDataZte(furl):
+    print("开始增加数据......ZTE")
+    wb = load_workbook(furl)
+    ws = wb.active
+    print(ws)
+    print(ws.max_column)
+    print(ws.max_row)
+    rmax = ws.max_row
+    lmax = ws.max_column
+
+    for i in range(1, rmax):
+        c = ws.cell(i, lmax).value
+        ws.cell(i, lmax + 1).value = c
+        so = ws.cell(i, lmax)
+        tar = ws.cell(i, lmax + 1)
+        if so.has_style:  # 复杂单元格格式
+            tar._style = copy(so._style)
+            tar.fill = copy(so.fill)
+            tar.border = copy(so.border)
+            tar.alignment = copy(so.alignment)
+
+    ws.merge_cells(start_row=77, start_column=lmax + 1, end_row=78, end_column=lmax + 1) #合并单元格
+    ws.merge_cells(start_row=79, start_column=lmax + 1, end_row=80, end_column=lmax + 1)
+
+    ws.cell(4, lmax + 1).value = int(time.strftime("%d", time.localtime())) #更新日期
+    ws.cell(9, lmax + 1).value = 0.52 + random.randint(3, 6) * 0.001 + random.randint(0, 9) * 0.0001 #更新数据
+
+    wb.save(furl)
+    print("修改完成。")
+
+def main():
+    loadDriver()
+
+if __name__ == '__main__':
+   main()
