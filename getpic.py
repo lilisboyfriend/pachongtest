@@ -64,7 +64,7 @@ def execute(url):
 def main():
    # create_dir('pic2')
 
-   for i in range(13,23):
+   for i in range(24,30):
        url = 'https://wallhaven.cc/toplist?page={}'.format(i)
        page_html = download_page(url)
        get_pic_list(page_html)
