@@ -1,64 +1,91 @@
 from openpyxl import Workbook
 from openpyxl import load_workbook
 import time
+import csv
+import pandas as pd
 import random
-from openpyxl.styles import colors, Font, Fill, NamedStyle
-from openpyxl.styles import PatternFill, Border, Side, Alignment
-from openpyxl.styles import Font, Alignment  #设置单元格格式
-from openpyxl.utils import get_column_letter, column_index_from_string
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 from copy import copy, deepcopy
 
-print("开始增加数据......HW")
-url1 = "D:\日报\烽火日报2021{}{}.xlsx".format(time.strftime("%m", time.localtime()),time.strftime("%d", time.localtime(time.time()-86400)))
-url2 = "D:\日报\烽火并发日报2021-{}-{}.xlsx".format(time.strftime("%m",time.localtime()),time.strftime("%d",time.localtime()))
-print(url1)
-print(url2)
-wb1 = load_workbook(url1)
-wb2 = load_workbook(url2)
+# csvf= pd.read_csv('D:\日报\中兴并发日报模板.csv' ,encoding="gbk", header=None)
+# print(csvf)
+# csvf.to_csv('D:\日报\中兴并发日报模板test3.csv')
 
-ws1 = wb1.active
-print(ws1.title)
-ws2 = wb2.active
-print(ws2.title)
+csvf = open("D:\日报\中兴并发日报模板test.csv", 'w', encoding='gbk',newline='')
+csvtar = open("D:\日报\中兴并发日报模板.csv",encoding='gbk')
+tarread = csv.reader(csvtar)
+csfw = csv.writer(csvf)
+day = '2021/4/10'
+csfw.writerow(day,' ')
+csfw.writerows(tarread)
+# for r in tarread:
+#     print(r)
+#     csfw.writerow(r)
 
-rmax1 = ws1.max_row
-lmax1 = ws1.max_column
-print(rmax1,lmax1)
-rmax2 = ws2.max_row
-lmax2 = ws2.max_column
-print(rmax2,lmax2)
 
-ws1.cell(lmax1+4,1).value = time.strftime("%y/%m/%d", time.localtime())
 
-for i in range(1,rmax2+1):
-    for j in range(1,lmax2+1):
-        ws1.cell(j+lmax1+5,i).value = ws2.cell(j,i).value
+# # 烽火三天日报测试脚本
+# m = time.strftime("%m",time.localtime())
+# day = time.strftime("%d",time.localtime())
+# wbmb = load_workbook("D:\日报\烽火并发日报模板.xlsx")
+# wsmb = wbmb.active
+# bz_list = [25,13,1]
+# month = [31,28,31,30,31,30,31,31,30,31,30,31]  # month list
+# for i in range(1,4):
+#     inday = int(day) - i
+#     inday2 = int(day) -i +1;
+#     if(inday == 0):
+#         remon = int(m) - 1
+#         inday = month[remon]
+#     elif(inday == -1):
+#         remon = int(m) -1
+#         inday = month[remon] - 1
+#     elif(inday<10):
+#         inday = "0{}".format(inday)
+#
+#     if (inday2 < 1):
+#         day = 2
+#     elif (inday2 < 10):
+#         inday2 = "0{}".format(inday2)
+#
+#     file = "D:\日报\ss_2021-{}-{}.csv".format(m,inday)
+#     # wb = load_workbook(file)
+#     # ws = wb.active
+#     print(file)
+#     csvF = open(file,'r',encoding='utf-8')
+#     read = csv.reader(csvF)
+#     index = bz_list[i-1]
+#     wsmb.cell(index,1).value = "2021/{}/{}".format(m,inday2)
+#     index = index +1
+#     for line in read:
+#         # print(line)
+#         k = 1
+#         for v in line:
+#             wsmb.cell(index, k).value = v
+#             k = k+1
+#         index = index +1
+#
+#     # wsmb.cell(index,1).value = "2021/{}/{}".format(m,day)
+#     # for j in range(index,index+r):
+#     #     for k in range(1,c):
+#     #         wsmb.cell(j,k).value = ws.cell(j-index+1,k).value
+#
+#
+# wbmb.save("D:\日报\烽火并发日报2021-{}-{}到{}.xlsx".format(m,inday2,day))
+# # 烽火三天日报脚本
 
-wb1.save(url1)
-wb2.save(url2)
+
+
 
 
 # wb = load_workbook("D:\日报\日常巡检表.xlsx")
 # ws = wb.active
 # print(ws.title)
-#
-#
 # print(ws)
 # print(ws.max_column)
 # print(ws.max_row)
 # rmax = ws.max_row
 # lmax = ws.max_column
-# #
-# # so = ws.cell(1,lmax)
-# # tar = ws.cell(1,lmax+1)
-# #
-# # ws.cell(4,lmax+1).value = ws.cell(4,lmax).value+1
-# #
-# # if so.has_style:
-# #     tar._style = copy(so._style)
-# #     tar.fill = copy(so.fill)
-# #
+#
 # ws.cell(1,lmax+1).value = time.strftime("%y.%m.%d", time.localtime())
 # for i in range(2,rmax+1):
 #     c = ws.cell(i,lmax).value

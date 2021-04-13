@@ -5,6 +5,7 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 import time
 import random
+from datetime import datetime
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -25,9 +26,10 @@ def loadDriver():      #加载浏览器驱动
     driver.get("http://10.192.70.242:10080/default.aspx")
     driver.implicitly_wait(20)
 
-    hwModel(driver)  #hw日报
+    hwModel(driver)  # hw日报
     zteModel(driver)  # zte日报
-    time.sleep(180)
+    fhModel(driver)  # fh日报
+    time.sleep(300)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -35,55 +37,67 @@ def loadDriver():      #加载浏览器驱动
 def fhModel(driver):
     print("------------ fh ----------")
     ftb1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
+    # //*[@id="17692"]/tbody/tr/td[1]/a
     ftb1.click()
-    ftb2 = driver.find_element_by_xpath("//*[@id='2283']/tbody/tr/td[1]/a")
+    ftb2 = driver.find_element_by_xpath("//*[@id='17692']/tbody/tr/td[1]/a")  # 维护作业
     ftb2.click()
-    ftb3 = driver.find_element_by_xpath("//*[@id='2314']/tbody/tr/td[1]/a")
+    ftb3 = driver.find_element_by_xpath("//*[@id='2283']/tbody/tr/td[1]/a")
     ftb3.click()
-    ftb4 = driver.find_element_by_xpath("//*[@id='12658']/tbody/tr/td[1]/a")
+    ftb4 = driver.find_element_by_xpath("//*[@id='2314']/tbody/tr/td[1]/a")
     ftb4.click()  # 下载
+    ftb5 = driver.find_element_by_xpath("//*[@id='12658']/tbody/tr/td[1]/a")
+    ftb5.click()
     time.sleep(20)
     fhUrl = "D:\日报\日常巡检表.xlsx"
     addDataFh(fhUrl)  # 增加数据
     upLoad(driver, fhUrl)  # 上传数据
-    time.sleep(10)
+    time.sleep(3)
 
 def zteModel(driver):
     print("———————— ZTE ——————————")
+    # //*[@id="zz2_QuickLaunchMenun2"]/td/table/tbody/tr/td/a
     zbt1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
     zbt1.click()
-    zbt2 = driver.find_element_by_xpath("//*[@id='1']/tbody/tr/td[1]/a")
+    zbt2 = driver.find_element_by_xpath("//*[@id='17692']/tbody/tr/td[1]/a")
     zbt2.click()
-    zbt3 = driver.find_element_by_xpath("//*[@id='8']/tbody/tr/td[1]/a")
+    zbt3 = driver.find_element_by_xpath("//*[@id='1']/tbody/tr/td[1]/a")
     zbt3.click()
+    zbt6 = driver.find_element_by_xpath("//*[@id='8']/tbody/tr/td[1]/a")
+    zbt6.click()
+    # //*[@id="17034"]/tbody/tr/td[1]/a
     zbt4 = driver.find_element_by_xpath("//*[@id='17034']/tbody/tr/td[1]/a")  # 不同年份不一样
     zbt4.click()
-    zbt5 = driver.find_element_by_xpath("//*[@id='17459']/tbody/tr/td[1]/a")  # 不同月份不一样
+    # //*[@id="17720"]/tbody/tr/td[1]/a
+    zbt5 = driver.find_element_by_xpath("//*[@id='17720']/tbody/tr/td[1]/a")  # 不同月份不一样
     zbt5.click()  # 下载文件
     driver.implicitly_wait(10)
     time.sleep(30)
-    zteFileUrl = "D:\日报\\2021ZTE日常维护表_中兴维护计划3月.xlsx"
+    zteFileUrl = "D:\日报\\2021ZTE日常维护表_中兴维护计划4月.xlsx"
     addDataZte(zteFileUrl)  # 增加数据
     upLoad(driver, zteFileUrl) #上传数据
-    time.sleep(10)
+    time.sleep(3)
 
 def hwModel(driver):
     print("HW.................")
     bt1 = driver.find_element_by_xpath("//*[@id='zz2_QuickLaunchMenun2']/td/table/tbody/tr/td/a")
     bt1.click()
     driver.implicitly_wait(2)
-    bt2 = driver.find_element_by_xpath("//*[@id='2']/tbody/tr/td[1]/a")
+    bt2 = driver.find_element_by_xpath("//*[@id='17692']/tbody/tr/td[1]/a")
     bt2.click()
     driver.implicitly_wait(2)
-    bt3 = driver.find_element_by_xpath("//*[@id='372']/tbody/tr/td[1]/a")
+    bt3 = driver.find_element_by_xpath("//*[@id='2']/tbody/tr/td[1]/a")
     bt3.click()
+    bt6 = driver.find_element_by_xpath("//*[@id='372']/tbody/tr/td[1]/a")
+    bt6.click()
+    # //*[@id="17032"]/tbody/tr/td[1]/a
     bt4 = driver.find_element_by_xpath("//*[@id='17032']/tbody/tr/td[1]/a")  # 不同年份不一样
     bt4.click()
-    bt5 = driver.find_element_by_xpath("//*[@id='17457']/tbody/tr/td[1]/a")  # 不同月份不一样
+    # //*[@id="17719"]/tbody/tr/td[1]/a
+    bt5 = driver.find_element_by_xpath("//*[@id='17719']/tbody/tr/td[1]/a")  # 不同月份不一样
     bt5.click()  # 下载
     driver.implicitly_wait(10)
-    time.sleep(20)
-    hwFileUrl = "D:\日报\HW_日常维护表_HW维护计划3月.xlsx"  #文件地址 每月需要修改
+    time.sleep(10)
+    hwFileUrl = "D:\日报\HW_日常维护表_HW维护计划4月.xlsx"  #文件地址 每月需要修改
     addDataHW(hwFileUrl)   # 处理表格
     upLoad(driver, hwFileUrl) #上传文件
     time.sleep(10)
@@ -91,6 +105,7 @@ def hwModel(driver):
 
 def upLoad(driver,fileUrl):  #上传文件
     print("开始上传")
+    # //*[@id="zz18_UploadMenu"]
     bt6 = driver.find_element_by_xpath("//*[@id='zz18_UploadMenu']")  # 上传
     bt6.click()
     input = driver.find_element_by_xpath("//*[@id='ctl00_PlaceHolderMain_ctl01_ctl02_InputFile']")
@@ -98,7 +113,7 @@ def upLoad(driver,fileUrl):  #上传文件
     # input.click()
     bt7 = driver.find_element_by_xpath("//*[@id='ctl00_PlaceHolderMain_ctl00_RptControls_btnOK']")
     bt7.click()
-    driver.implicitly_wait(20)
+    driver.implicitly_wait(10)
     time.sleep(10)
     print("上传成功： "+fileUrl)
 
@@ -134,7 +149,11 @@ def addDataHW(furl):
     lmax = ws.max_column
     so = ws.cell(1, lmax)
     tar = ws.cell(1, lmax + 1)
-    ws.cell(1, lmax + 1).value = ws.cell(1, lmax).value + 1  #更新日期
+    weekday = datetime.now().weekday()
+    if weekday == 0:
+        ws.cell(1, lmax + 1).value = ws.cell(1, lmax).value + 3  # 更新日期 星期一加3
+    else:
+        ws.cell(1, lmax + 1).value = ws.cell(1, lmax).value + 1  # 更新日期
     if so.has_style:   #复杂单元格格式
         tar._style = copy(so._style)
         tar.fill = copy(so.fill)
