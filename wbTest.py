@@ -5,25 +5,50 @@ import csv
 import pandas as pd
 import random
 from copy import copy, deepcopy
+from ftplib import FTP
+import os
 
-# csvf= pd.read_csv('D:\日报\中兴并发日报模板.csv' ,encoding="gbk", header=None)
-# print(csvf)
-# csvf.to_csv('D:\日报\中兴并发日报模板test3.csv')
+ftp = FTP()
+# ftp.set_debuglevel(2)
+ftp.connect("124.75.32.237",21)
+ftp.login("zxin10","Sos10+Pad6")
+print(ftp.getwelcome())
 
-csvf = open("D:\日报\中兴并发日报模板test.csv", 'w', encoding='gbk',newline='')
-csvtar = open("D:\日报\中兴并发日报模板.csv",encoding='gbk')
-tarread = csv.reader(csvtar)
-csfw = csv.writer(csvf)
-day = '2021/4/10'
-csfw.writerow(day,' ')
-csfw.writerows(tarread)
-# for r in tarread:
-#     print(r)
-#     csfw.writerow(r)
+ftp.cwd("4ktongji")
+print(ftp.dir())
+
+localdir = "D:\日报\\"
+if not os.path.exists(localdir):
+    os.makedirs(localdir)
+listf = ftp.nlst()
+for file in listf:
+    local = os.path.join(localdir,file)
+    print("下载",ftp.nlst(file))
+    file_handler = open(local, 'wb').write
+    ftp.retrbinary('RETR ' + file, file_handler)
+
+ftp.quit()
 
 
 
-# # 烽火三天日报测试脚本
+# # csvf= pd.read_csv('D:\日报\中兴并发日报模板.csv' ,encoding="gbk", header=None)
+# # print(csvf)
+# # csvf.to_csv('D:\日报\中兴并发日报模板test3.csv')
+#
+# # csvf = open("D:\日报\中兴并发日报模板test.csv", 'w', encoding='gbk',newline='')
+# # csvtar = open("D:\日报\中兴并发日报模板.csv",encoding='gbk')
+# # tarread = csv.reader(csvtar)
+# # csfw = csv.writer(csvf)
+# # day = '2021/4/10'
+# # csfw.writerow(day,' ')
+# # csfw.writerows(tarread)
+# # for r in tarread:
+# #     print(r)
+# #     csfw.writerow(r)
+#
+#
+#
+# # # 烽火三天日报测试脚本
 # m = time.strftime("%m",time.localtime())
 # day = time.strftime("%d",time.localtime())
 # wbmb = load_workbook("D:\日报\烽火并发日报模板.xlsx")
@@ -32,7 +57,7 @@ csfw.writerows(tarread)
 # month = [31,28,31,30,31,30,31,31,30,31,30,31]  # month list
 # for i in range(1,4):
 #     inday = int(day) - i
-#     inday2 = int(day) -i +1;
+#     inday2 = int(day) -i +1
 #     if(inday == 0):
 #         remon = int(m) - 1
 #         inday = month[remon]
@@ -72,43 +97,43 @@ csfw.writerows(tarread)
 #
 # wbmb.save("D:\日报\烽火并发日报2021-{}-{}到{}.xlsx".format(m,inday2,day))
 # # 烽火三天日报脚本
-
-
-
-
-
-# wb = load_workbook("D:\日报\日常巡检表.xlsx")
-# ws = wb.active
-# print(ws.title)
-# print(ws)
-# print(ws.max_column)
-# print(ws.max_row)
-# rmax = ws.max_row
-# lmax = ws.max_column
-#
-# ws.cell(1,lmax+1).value = time.strftime("%y.%m.%d", time.localtime())
-# for i in range(2,rmax+1):
-#     c = ws.cell(i,lmax).value
-#     ws.cell(i,lmax+1).value = c
-#     so = ws.cell(i,lmax)
-#     tar = ws.cell(i,lmax+1)
-#     if so.has_style:   #复杂单元格格式
-#         tar._style = copy(so._style)
-#         tar.fill = copy(so.fill)
-#         tar.border = copy(so.border)
-#         tar.alignment = copy(so.alignment)
-#
-# # ws.merge_cells(start_row=77, start_column=lmax+1, end_row=78, end_column=lmax+1)
-# # ws.merge_cells(start_row=79, start_column=lmax+1, end_row=80, end_column=lmax+1)
 #
 #
-# # ws.cell(9,lmax+1).value = 0.52+random.randint(3,6)*0.001+random.randint(0,9)*0.0001
+#
+#
+#
+# # wb = load_workbook("D:\日报\日常巡检表.xlsx")
+# # ws = wb.active
+# # print(ws.title)
+# # print(ws)
+# # print(ws.max_column)
+# # print(ws.max_row)
+# # rmax = ws.max_row
+# # lmax = ws.max_column
 # #
-# wb.save("D:\日报\日常巡检表.xlsx")
-# # print("修改完成。")
+# # ws.cell(1,lmax+1).value = time.strftime("%y.%m.%d", time.localtime())
+# # for i in range(2,rmax+1):
+# #     c = ws.cell(i,lmax).value
+# #     ws.cell(i,lmax+1).value = c
+# #     so = ws.cell(i,lmax)
+# #     tar = ws.cell(i,lmax+1)
+# #     if so.has_style:   #复杂单元格格式
+# #         tar._style = copy(so._style)
+# #         tar.fill = copy(so.fill)
+# #         tar.border = copy(so.border)
+# #         tar.alignment = copy(so.alignment)
+# #
+# # # ws.merge_cells(start_row=77, start_column=lmax+1, end_row=78, end_column=lmax+1)
+# # # ws.merge_cells(start_row=79, start_column=lmax+1, end_row=80, end_column=lmax+1)
 # #
 # #
-# # #ws.cell(1,lmax+1).value = time.strftime("%m/%d", time.localtime())
-# for i in range(1,rmax):
-#     c = ws.cell(i,lmax+1).value
-#     print(c)
+# # # ws.cell(9,lmax+1).value = 0.52+random.randint(3,6)*0.001+random.randint(0,9)*0.0001
+# # #
+# # wb.save("D:\日报\日常巡检表.xlsx")
+# # # print("修改完成。")
+# # #
+# # #
+# # # #ws.cell(1,lmax+1).value = time.strftime("%m/%d", time.localtime())
+# # for i in range(1,rmax):
+# #     c = ws.cell(i,lmax+1).value
+# #     print(c)

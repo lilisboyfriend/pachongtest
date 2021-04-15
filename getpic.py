@@ -63,29 +63,18 @@ def execute(url):
 
 def main():
    # create_dir('pic2')
-
-   for i in range(24,30):
+   if not os.path.exists('pic'):
+       os.makedirs('pic')
+   s = input("请输入开始页码：")
+   e = input("请输入终止页码：")
+   start = int(s)
+   end = int(e)
+   for i in range(start,end):
+       print("开始下载page={}".format(i))
        url = 'https://wallhaven.cc/toplist?page={}'.format(i)
        page_html = download_page(url)
        get_pic_list(page_html)
-   # url = 'https://wallhaven.cc/toplist?page=3'
-   # page_html = download_page(url)
-   # get_pic_list(page_html)
 
-   # queue = [i for i in range(11, 30)]   # 构造 url 链接 页码。
-   # threads = []
-   # while len(queue) > 0:
-   #     for thread in threads:
-   #         if not thread.is_alive():
-   #             threads.remove(thread)
-   #     while len(threads) < 5 and len(queue) > 0:   # 最大线程数设置为 5
-   #         cur_page = queue.pop(0)
-   #         url = 'https://wallhaven.cc/toplist?page={}.html'.format(cur_page)
-   #         thread = threading.Thread(target=execute, args=(url,))
-   #         thread.setDaemon(True)
-   #         thread.start()
-   #         print('{}正在下载{}页'.format(threading.current_thread().name, cur_page))
-   #         threads.append(thread)
 
 if __name__ == '__main__':
    main()
