@@ -8,26 +8,32 @@ from copy import copy, deepcopy
 from ftplib import FTP
 import os
 
-ftp = FTP()
-# ftp.set_debuglevel(2)
-ftp.connect("124.75.32.237",21)
-ftp.login("zxin10","Sos10+Pad6")
-print(ftp.getwelcome())
 
-ftp.cwd("4ktongji")
-print(ftp.dir())
+iid = input("id：")
+fwqiid = input("服务器id：")
+print("update s830cardinf set terminalid={},serterminalid={} where userid='{}';".format(fwqiid,fwqiid,iid))
+print("select terminalid,serterminalid from s830cardinf where userid='{}';".format(iid))
 
-localdir = "D:\日报\\"
-if not os.path.exists(localdir):
-    os.makedirs(localdir)
-listf = ftp.nlst()
-for file in listf:
-    local = os.path.join(localdir,file)
-    print("下载",ftp.nlst(file))
-    file_handler = open(local, 'wb').write
-    ftp.retrbinary('RETR ' + file, file_handler)
-
-ftp.quit()
+# ftp = FTP()
+# # ftp.set_debuglevel(2)
+# ftp.connect("124.75.32.237",21)
+# ftp.login("zxin10","Sos10+Pad6")
+# print(ftp.getwelcome())
+#
+# ftp.cwd("4ktongji")
+# print(ftp.dir())
+#
+# localdir = "D:\日报\\"
+# if not os.path.exists(localdir):
+#     os.makedirs(localdir)
+# listf = ftp.nlst()
+# for file in listf:
+#     local = os.path.join(localdir,file)
+#     print("下载",ftp.nlst(file))
+#     file_handler = open(local, 'wb').write
+#     ftp.retrbinary('RETR ' + file, file_handler)
+#
+# ftp.quit()
 
 
 

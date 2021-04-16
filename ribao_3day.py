@@ -82,13 +82,19 @@ def main():
 
     wbmb = load_workbook("D:\日报\烽火并发日报模板.xlsx")
     getribao(m, day, fhbz_list, month, wbmb, 1, num)  # bz = 1 代表fh日报
-    wbmb.save("D:\日报\烽火并发日报2021-{}-{}到{}.xlsx".format(m, startday, day))
+    if num == 4:
+        wbmb.save("D:\日报\烽火并发日报2021-{}-{}到{}.xlsx".format(m, startday, day))
+    else:
+        wbmb.save("D:\日报\烽火并发日报2021-{}-{}.xlsx".format(m, day))
 
     ftp_getZteFile()  # 获取中兴日报文件
     ztebz_list = [17, 9, 1]
     wbmb2 = load_workbook("D:\日报\中兴并发日报模板2.xlsx")
     getribao(m, day, ztebz_list, month, wbmb2, 0, num)  # bz = 0 代表zte日报
-    wbmb2.save("D:\日报\中兴并发日报2021-{}-{}到{}.xlsx".format(m, startday, day))
+    if num == 4:
+        wbmb2.save("D:\日报\中兴并发日报2021-{}-{}到{}.xlsx".format(m, startday, day))
+    else:
+        wbmb2.save("D:\日报\中兴并发日报2021-{}-{}.xlsx".format(m, startday, day))
 
 
 
